@@ -55,7 +55,7 @@ fs.readdir(stylePath, {
         });
     });
 (async function () {
-    const reg = new RegExp('{{[a-z]+}}', 'gm');
+    const reg = new RegExp('^{{[a-z]+}}$', 'gm');
     let res = (await fs.readFile(templatePath, 'utf-8')).split('\n');
     let objHtml = {};
     const arrDir = await fs.readdir(componentsPath, {
@@ -68,10 +68,11 @@ fs.readdir(stylePath, {
             objHtml[itemName] = await fs.readFile(pathItem, 'utf-8');
         }
     }
-    res.forEach((strTemp, i) => {
-        if (reg.test(strTemp.trim())) {
-            res[i] = objHtml[strTemp.trim().slice(2, -2)];
+    for (let i = 0; i < res.length; i++) {
+        if (reg.test(res[i].trim())) {
+            res[i] = objHtml[res[i].trim().slice(2, -2)];
         }
-    });
+        reg.test(res[0].trim());
+    }
     await fs.writeFile(indexPath, res.join('\n'));
 })();
