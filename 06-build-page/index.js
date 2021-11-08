@@ -10,7 +10,8 @@ const templatePath = path.join(__dirname, 'template.html');
 const indexPath = path.join(distPath, 'index.html');
 const componentsPath = path.join(__dirname, 'components');
 
-function copyFL(src, des) {
+async function copyFL(src, des) {
+    await fs.rm(des, {recursive:true, force:true});
     fs.mkdir(des, {
         recursive: true
     });
