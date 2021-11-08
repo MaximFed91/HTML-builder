@@ -38,23 +38,24 @@ fs.mkdir(distPath, {
 
 copyFL(assetsPath, assetsCopyPath);
 
-fs.writeFile(styleDistPath, '');
-fs.readdir(stylePath, {
+(async function () {
+    await fs.writeFile(styleDistPath, '');
+    const stlFils = await fs.readdir(stylePath, {
         withFileTypes: true
-    })
-    .then(data => {
-        data.forEach(item => {
-            if (item.isFile()) {
-                const pathItem = path.join(stylePath, item.name);
-                const itemExt = path.extname(pathItem);
-                if (itemExt === '.css') {
-                    fs.readFile(pathItem).then(data => {
-                        fs.appendFile(styleDistPath, data);
-                    });
-                }
-            }
-        });
     });
+    for (const item of stlFils) {
+        if (item.isFile()) {
+            const pathItem = path.join(stylePath, item.name);
+            const itemExt = path.extname(pathItem);
+            if (itemExt === '.css') {
+              const data = await  fs.readFile(pathItem);
+                   await fs.appendFile(styleDistPath, data);
+            }
+        }
+    }
+})();
+
+
 (async function () {
     const reg = new RegExp('^{{[a-z]+}}$', 'gm');
     let res = (await fs.readFile(templatePath, 'utf-8')).split('\n');
