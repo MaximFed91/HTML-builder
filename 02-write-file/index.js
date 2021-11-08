@@ -6,17 +6,12 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 const pathFile = path.join(__dirname, 'testtext.txt');
-rl.question('Write some text:\n', str => {
-    if (str === 'exit') {
-        process.exit();
+fs.writeFile(pathFile, '', err=>{
+    if (err) {
+        throw err;
     }
-    fs.writeFile(pathFile, str, err => {
-        if (err) {
-            throw err;
-        }
-    });
-    console.log('Write more text:');
 });
+console.log('Write some text:');
 rl.on('line', line => {
     if (line === 'exit') {
         process.exit();
